@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo de Productos</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="img/logoblanco.png" alt="" width="150">
+            <div class="cart-icon">
+                <span id="cart-count">0</span>
+                <button id="cart-btn">🛒</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar Productos...">
+        </div>
+        <section id="products-container"></section>
+
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Carrito de Compras</h2>
+                <div id="cart-items"></div>
+                <div id="cart-total">Total: $0</div>
+                <button id="checkout-btn">Comprar
+        </div>
+    </main>
+
+    <script src="js/productos.js"></script>
+    <script src="js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
