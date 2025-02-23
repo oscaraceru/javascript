@@ -141,7 +141,7 @@ function displayFilteredProducts(productsToShow) {
     container.innerHTML = ''; 
 
     if (productsToShow.length === 0) {
-        container.innerHTML = '<p class="no-results">No products found</p>';
+        container.innerHTML = '<p class="no-results">Productos no encontrados</p>';
         return;
     }
 
