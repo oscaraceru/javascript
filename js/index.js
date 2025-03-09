@@ -1,48 +1,65 @@
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let products = [];
 
-
-function showProductDetails(productId) {
-    const product = products.find(p => p.id === productId);
-    Swal.fire({
-        title: product.name,
-        html: `
-            <div class="product-detail">
-                <img src="${product.image}" alt="${product.name}" style="max-width: 300px">
-                <p class="price">Precio: $${product.price}</p>
-                <p class="description">${product.description}</p>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Agregar al Carrito',
-        cancelButtonText: 'Cerrar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            addToCart(productId);
-        }
+// Fetch products
+fetch('js/productos.json')
+    .then(response => response.json())
+    .then(data => {
+        products = data.products;
+        displayProducts();
+        updateCartCount();
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error!',
+            text: 'No se pudieron cargar los productos',
+            icon: 'error'
+        });
     });
-}
 
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const existingItem = cart.find(item => item.id === productId);
-
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({ ...product, quantity: 1 });
+    function showProductDetails(productId) {
+        const product = products.find(p => p.id === productId);
+        Swal.fire({
+            title: product.name,
+            html: `
+                <div class="product-detail">
+                    <img src="${product.image}" alt="${product.name}" style="max-width: 300px">
+                    <p class="price">Precio: $${product.price}</p>
+                    <p class="description">${product.description}</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Agregar al Carrito',
+            cancelButtonText: 'Cerrar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                addToCart(productId);
+            }
+        });
     }
 
-    updateCartCount();
-    updateCartDisplay();
-
-    Swal.fire({
-        title: 'Success!',
-        text: `${product.name} ha sido añadido a tu carrito`,
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-    });
-}
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        const existingItem = cart.find(item => item.id === productId);
+    
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+    
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        updateCartDisplay();
+    
+        Swal.fire({
+            title: 'Success!',
+            text: `${product.name} ha sido añadido a tu carrito`,
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
 
 function updateCartCount() {
     const cartCount = document.getElementById('cart-count');
@@ -74,6 +91,7 @@ function updateCartDisplay() {
 
 function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     updateCartDisplay();
 }
@@ -117,6 +135,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
                 icon: 'success'
             });
             cart = [];
+            localStorage.removeItem('cart');
             updateCartCount();
             updateCartDisplay();
             modal.style.display = "none";
